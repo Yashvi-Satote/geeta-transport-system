@@ -1,144 +1,60 @@
 import { useState } from 'react'
-import Signup from './components/Signup.jsx'
-import StudentSignup from './student sign up/StudentSignup.jsx'
-import TeacherSignup from './teacher-signup/TeacherSignup.jsx'
-import BusDriverSignup from './bus-driver-signup/BusDriverSignup.jsx'
-import ManagerSignup from './manager-signup/ManagerSignup.jsx'
-import Dashboard from './dashboard/Dashboard.jsx'
-import BusInchargeDashboard from './bus-incharge-dashboard/pages/Dashboard.jsx'
-import BusDriverDashboard from './bus-driver-dashboard/pages/Dashboard.jsx'
-import { DataProvider } from './shared/DataContext.jsx'
+import { AuthProvider, useAuth }     from './auth/AuthContext'
+import { DataProvider }              from './shared/DataContext'
+import { ThemeProvider }             from './theme/ThemeContext'
+import { LanguageProvider }          from './i18n/LanguageContext'
+import GlobalControls                from './theme/GlobalControls'
 
-function App() {
-  const [page, setPage] = useState('login')
-  const [userDetails, setUserDetails] = useState({
-    name: '',
-    role: '',
-    busNumber: '',
-    routeName: '',
-    busStop: '',
-  })
-  const [isDarkMode, setIsDarkMode] = useState(false)
-  const [role, setRole] = useState('')
+import Login   from './auth/Login'
+import Signup  from './auth/Signup'
 
-  const handleStudentClick = () => {
-    setPage('studentSignup')
-  }
+import BusInchargeDashboard from './bus-incharge-dashboard/pages/Dashboard'
+import BusDriverDashboard   from './bus-driver-dashboard/pages/Dashboard'
+import ManagerDashboard     from './manager-dashboard/pages/Dashboard'
+import Dashboard            from './dashboard/Dashboard'
 
-  const handleTeacherClick = () => {
-    setRole('Teacher')
-    setPage('teacherSignup')
-  }
+// -----------------------------------------------------------------------
+// Inner router — role-based routing after auth
+// -----------------------------------------------------------------------
+function AppRouter() {
+  const { isLoggedIn, currentUser, logout } = useAuth()
+  const [authPage, setAuthPage] = useState('login')
 
-  const handleBusInchargeClick = () => {
-    setRole('Bus Incharge')
-    setPage('teacherSignup')
-  }
-
-  const handleBusDriverClick = () => {
-    setRole('Bus Driver')
-    setPage('busDriverSignup')
-  }
-
-  const handleManagerClick = () => {
-    setRole('Manager')
-    setPage('managerSignup')
-  }
-
-  const handleSignupComplete = (data) => {
-    const userData = {
-      name: data.name || 'User',
-      role: data.role || role || 'Student',
-      busNumber: data.busNumber || 'N/A',
-      routeName: data.routeName || 'N/A',
-      busStop: data.busStop || 'N/A',
+  if (!isLoggedIn) {
+    if (authPage === 'signup') {
+      return <Signup onNavigateLogin={() => setAuthPage('login')} />
     }
-    setUserDetails(userData)
-    localStorage.setItem('user', JSON.stringify(userData))
-    
-    if (userData.role === 'Bus Incharge') {
-      setPage('busInchargeDashboard')
-    } else if (userData.role === 'Bus Driver') {
-      setPage('busDriverDashboard')
-    } else {
-      setPage('dashboard')
-    }
+    return <Login onNavigateSignup={() => setAuthPage('signup')} />
   }
 
-  const handleBackToLogin = () => {
-    setUserDetails({
-      name: '',
-      role: '',
-      busNumber: '',
-      routeName: '',
-      busStop: '',
-    })
-    setRole('')
-    setPage('login')
-  }
+  const role = currentUser?.role
 
-  return (
-    <DataProvider>
-      {page === 'login' && (
-        <Signup
-          onStudentClick={handleStudentClick}
-          onTeacherClick={handleTeacherClick}
-          onBusInchargeClick={handleBusInchargeClick}
-          onBusDriverClick={handleBusDriverClick}
-          onManagerClick={handleManagerClick}
-          isDarkMode={isDarkMode}
-          setIsDarkMode={setIsDarkMode}
-        />
-      )}
-      {page === 'studentSignup' && (
-        <StudentSignup
-          onSignupComplete={handleSignupComplete}
-          onBack={handleBackToLogin}
-          isDarkMode={isDarkMode}
-        />
-      )}
-      {page === 'teacherSignup' && (
-        <TeacherSignup
-          role={role}
-          onSignupComplete={handleSignupComplete}
-          onBack={handleBackToLogin}
-          isDarkMode={isDarkMode}
-        />
-      )}
-      {page === 'busDriverSignup' && (
-        <BusDriverSignup
-          onSignupComplete={handleSignupComplete}
-          onBack={handleBackToLogin}
-          isDarkMode={isDarkMode}
-        />
-      )}
-      {page === 'managerSignup' && (
-        <ManagerSignup
-          onSignupComplete={handleSignupComplete}
-          onBack={handleBackToLogin}
-          isDarkMode={isDarkMode}
-        />
-      )}
-      {page === 'dashboard' && (
-        <Dashboard
-          onLogout={handleBackToLogin}
-          isDarkMode={isDarkMode}
-        />
-      )}
-      {page === 'busInchargeDashboard' && (
-        <BusInchargeDashboard
-          onLogout={handleBackToLogin}
-          isDarkMode={isDarkMode}
-        />
-      )}
-      {page === 'busDriverDashboard' && (
-        <BusDriverDashboard
-          onLogout={handleBackToLogin}
-          isDarkMode={isDarkMode}
-        />
-      )}
-    </DataProvider>
-  )
+  if (role === 'incharge') {
+    return <BusInchargeDashboard onLogout={logout} />
+  }
+  if (role === 'driver') {
+    return <BusDriverDashboard onLogout={logout} />
+  }
+  if (role === 'manager') {
+    return <ManagerDashboard onLogout={logout} userDetails={currentUser} />
+  }
+  return <Dashboard onLogout={logout} userDetails={currentUser} />
 }
 
-export default App
+// -----------------------------------------------------------------------
+// Root App — providers stack
+// -----------------------------------------------------------------------
+export default function App() {
+  return (
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <DataProvider>
+            <AppRouter />
+            <GlobalControls />
+          </DataProvider>
+        </AuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
+  )
+}

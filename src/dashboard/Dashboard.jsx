@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useLanguage } from '../i18n/LanguageContext'
 import Sidebar from './Sidebar.jsx'
 import MapView from './MapView.jsx'
 import Information from './Information.jsx'
@@ -9,23 +10,11 @@ const DEFAULT_CENTER = [29.3909, 76.9655]
 const DEFAULT_STOP = [29.3916, 76.9662]
 const DEFAULT_BUS = [29.3950, 76.9700]
 
-function Dashboard({ onLogout, isDarkMode }) {
+function Dashboard({ onLogout, userDetails = {} }) {
+  const { t } = useLanguage()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [isTracking, setIsTracking] = useState(false)
   const [busPosition, setBusPosition] = useState(DEFAULT_BUS)
-  const [userDetails, setUserDetails] = useState({})
-
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
-    setUserDetails(storedUser)
-  }, [])
-
-  useEffect(() => {
-    document.body.classList.toggle('dark-mode', isDarkMode)
-    return () => {
-      document.body.classList.remove('dark-mode')
-    }
-  }, [isDarkMode])
 
   useEffect(() => {
     if (!isTracking) return undefined
@@ -41,7 +30,6 @@ function Dashboard({ onLogout, isDarkMode }) {
   }, [isTracking])
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
     onLogout()
   }
 
@@ -52,8 +40,8 @@ function Dashboard({ onLogout, isDarkMode }) {
           <div className="dashboard-content">
             <div className="map-header">
               <div>
-                <p className="map-title">Live route overview</p>
-                <p className="map-text">This view shows the current bus position and nearest stop.</p>
+                <p className="map-title">{t('liveRouteOverview')}</p>
+                <p className="map-text">{t('mapDescription')}</p>
               </div>
             </div>
             <div className="map-frame">

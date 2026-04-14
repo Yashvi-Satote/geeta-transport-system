@@ -1,0 +1,386 @@
+/* =========================================
+   MANAGER DASHBOARD — Global Styles
+   ========================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+.manager-page {
+  min-height: 100vh;
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ---- Sidebar ---- */
+.mgr-sidebar {
+  width: 270px;
+  min-width: 270px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 28px 18px 24px;
+  z-index: 20;
+}
+
+.mgr-sidebar-brand {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--secondary);
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+.mgr-sidebar-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding-left: 10px;
+  margin-bottom: 36px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.mgr-nav-section {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  padding: 0 10px;
+  margin: 20px 0 8px;
+}
+
+.mgr-nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 13px 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: all 0.2s ease;
+}
+
+.mgr-nav-btn:hover {
+  background: rgba(0, 123, 255, 0.08);
+  color: var(--secondary);
+}
+
+.mgr-nav-btn.active {
+  background: var(--secondary);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.mgr-nav-btn .mgr-icon {
+  font-size: 1.1rem;
+}
+
+.mgr-logout-btn {
+  margin-top: auto;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.mgr-logout-btn:hover {
+  background: rgba(255, 122, 0, 0.1);
+  color: var(--primary);
+  border-color: rgba(255, 122, 0, 0.2);
+}
+
+/* ---- Main Content ---- */
+.mgr-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mgr-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ---- Page Header ---- */
+.mgr-header {
+  margin-bottom: 32px;
+}
+
+.mgr-title {
+  margin: 0 0 6px;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.mgr-subtitle {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* ---- Cards ---- */
+.mgr-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.mgr-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 20px;
+  color: var(--text);
+}
+
+/* ---- Bus Item ---- */
+.mgr-bus-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.mgr-bus-item:hover {
+  border-color: var(--secondary);
+}
+
+.mgr-bus-number {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+.mgr-bus-route {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.mgr-speed-chip {
+  background: rgba(0, 123, 255, 0.12);
+  color: var(--secondary);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* ---- Forms ---- */
+.mgr-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.mgr-select, .mgr-input {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 18px;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  box-sizing: border-box;
+}
+
+.mgr-select:focus, .mgr-input:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.12);
+}
+
+.mgr-select option {
+  background: var(--bg-card);
+  color: var(--text);
+}
+
+.mgr-btn-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.mgr-btn {
+  padding: 13px 28px;
+  border-radius: 12px;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.mgr-btn-primary {
+  background: var(--secondary);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.mgr-btn-primary:hover {
+  transform: translateY(-1px);
+  background: var(--primary);
+}
+
+.mgr-btn-danger {
+  background: rgba(255, 122, 0, 0.12);
+  color: var(--primary);
+  border: 1px solid rgba(255, 122, 0, 0.24);
+}
+
+.mgr-btn-danger:hover {
+  background: rgba(255,80,80,0.25);
+}
+
+/* ---- Staff Cards ---- */
+.mgr-staff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.mgr-staff-card {
+  background: #1a1e28;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.mgr-staff-bus-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #7c83fd, #6a55f8);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  padding: 6px 18px;
+  margin-bottom: 18px;
+}
+
+.mgr-staff-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.9rem;
+}
+
+.mgr-staff-row:last-child { border-bottom: none; }
+.mgr-staff-label { color: rgba(255,255,255,0.4); font-weight: 500; }
+.mgr-staff-value { color: #e8eaf6; font-weight: 600; }
+
+/* ---- Info Card ---- */
+.mgr-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.mgr-info-field {
+  background: #1a1e28;
+  border-radius: 12px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.mgr-info-key {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 6px;
+}
+
+.mgr-info-val {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #e8eaf6;
+}
+
+/* ---- Alert Message ---- */
+.mgr-alert {
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.mgr-alert-success {
+  background: rgba(52,211,153,0.12);
+  color: #34d399;
+  border: 1px solid rgba(52,211,153,0.25);
+}
+
+.mgr-alert-error {
+  background: rgba(255,80,80,0.1);
+  color: #ff6b6b;
+  border: 1px solid rgba(255,80,80,0.25);
+}
+
+/* ---- Status dot ---- */
+.mgr-live-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #34d399;
+  animation: pulse-dot 1.6s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .manager-page { flex-direction: column; }
+  .mgr-sidebar {
+    width: 100%;
+    min-width: unset;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 16px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .mgr-sidebar-brand, .mgr-sidebar-subtitle, .mgr-nav-section { display: none; }
+  .mgr-nav-btn { width: auto; padding: 10px 14px; font-size: 0.85rem; }
+  .mgr-main { padding: 20px 16px; }
+  .mgr-info-grid { grid-template-columns: 1fr; }
+}

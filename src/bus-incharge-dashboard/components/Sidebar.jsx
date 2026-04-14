@@ -1,11 +1,16 @@
+import { useLanguage } from '../../i18n/LanguageContext'
+
 export default function Sidebar({ activeTab, setActiveTab, onLogout }) {
+  const { t } = useLanguage()
+
   const tabs = [
-    { id: 'map', label: 'Dashboard (Map view)' },
-    { id: 'speed', label: 'Speed Analytics' },
-    { id: 'busInfo', label: 'Bus Information' },
-    { id: 'students', label: 'Student List' },
-    { id: 'merge', label: 'Merge Bus' },
-    { id: 'upload', label: 'Registration Upload' },
+    { id: 'map',     label: t('liveMap')             },
+    { id: 'speed',   label: t('speedAnalytics')      },
+    { id: 'busInfo', label: t('busInformation')      },
+    { id: 'students',label: t('studentList')         },
+    { id: 'attendance', label: 'Mark Attendance'     },
+    { id: 'merge',   label: t('mergeBus')            },
+    { id: 'upload',  label: t('registrationUpload')  },
   ]
 
   return (
@@ -23,8 +28,9 @@ export default function Sidebar({ activeTab, setActiveTab, onLogout }) {
         ))}
       </nav>
       <button className="bus-nav-button logout" onClick={onLogout}>
-        Logout
+        {t('logout')}
       </button>
     </aside>
   )
 }
+

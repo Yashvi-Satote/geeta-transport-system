@@ -5,6 +5,7 @@ import MapView from '../components/MapView'
 import SpeedAnalytics from '../components/SpeedAnalytics'
 import BusInfo from '../components/BusInfo'
 import StudentList from '../components/StudentList'
+import MarkAttendance from '../components/MarkAttendance'
 import MergeBus from '../components/MergeBus'
 import RegistrationUpload from '../components/RegistrationUpload'
 
@@ -30,6 +31,8 @@ export default function BusInchargeDashboard({ onLogout, isDarkMode }) {
         return <BusInfo />
       case 'students':
         return <StudentList />
+      case 'attendance':
+        return <MarkAttendance />
       case 'merge':
         return <MergeBus />
       case 'upload':

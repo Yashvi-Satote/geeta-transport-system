@@ -1,10 +1,13 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import './sidebar.css'
 
-function Sidebar({ activeTab, setActiveTab, onLogout }) {
+export default function Sidebar({ activeTab, setActiveTab, onLogout }) {
+  const { t } = useLanguage()
+
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '🗺️' },
-    { id: 'analytics', label: 'Speed Analytics', icon: '📊' },
-    { id: 'information', label: 'Information', icon: '👤' },
+    { id: 'dashboard', label: t('dashboard'), icon: '🗺️' },
+    { id: 'analytics', label: t('speedAnalytics'), icon: '📊' },
+    { id: 'information', label: t('information'), icon: '👤' },
   ]
 
   return (
@@ -27,11 +30,9 @@ function Sidebar({ activeTab, setActiveTab, onLogout }) {
       <div className="sidebar-footer">
         <button className="sidebar-item logout" onClick={onLogout}>
           <span className="sidebar-icon">🚪</span>
-          <span className="sidebar-label">Logout</span>
+          <span className="sidebar-label">{t('logout')}</span>
         </button>
       </div>
     </aside>
   )
 }
-
-export default Sidebar

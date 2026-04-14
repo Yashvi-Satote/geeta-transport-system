@@ -7,6 +7,7 @@ export function DataProvider({ children }) {
   const [buses, setBuses] = useState(initialSharedData.buses);
   const [students, setStudents] = useState(initialSharedData.students);
   const [driverLocation, setDriverLocation] = useState(initialSharedData.driverLocation);
+  const [currentSpeed, setCurrentSpeed] = useState(0);
 
   // Functions to manipulate global state
   const mergeStudents = (sourceBusNumber, targetBusNumber, stop) => {
@@ -46,15 +47,45 @@ export function DataProvider({ children }) {
     setDriverLocation(locationData);
   };
 
+  const updateSpeed = (speed) => {
+    setCurrentSpeed(speed);
+  };
+
+  const updateAttendance = (busNumber, attendanceData) => {
+    const today = new Date().toISOString().split('T')[0];
+    setStudents(prevStudents =>
+      prevStudents.map(student => {
+        if (student.busNumber === busNumber) {
+          const existingAttendance = student.attendance || [];
+          const todayIndex = existingAttendance.findIndex(a => a.date === today);
+          
+          if (todayIndex >= 0) {
+            // Update existing attendance for today
+            existingAttendance[todayIndex] = { date: today, isPresent: attendanceData[student.id] };
+          } else {
+            // Add new attendance for today
+            existingAttendance.push({ date: today, isPresent: attendanceData[student.id] });
+          }
+          
+          return { ...student, attendance: existingAttendance };
+        }
+        return student;
+      })
+    );
+  };
+
   return (
     <DataContext.Provider value={{
       buses,
       students,
       driverLocation,
+      currentSpeed,
       mergeStudents,
       reassignStudent,
       updateBusInfo,
-      updateLocation
+      updateLocation,
+      updateSpeed,
+      updateAttendance
     }}>
       {children}
     </DataContext.Provider>

@@ -1,12 +1,14 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import { calculateSpeed, saveToLocalStorage } from '../utils/geoTracker'
 import MapTracker from './MapTracker'
+import { DataContext } from '../../shared/DataContext'
 
 export default function StartRide() {
   const [isTracking, setIsTracking] = useState(false)
   const [speed, setSpeed] = useState(0)
   const [currentLocation, setCurrentLocation] = useState(null)
   
+  const { updateLocation, updateSpeed } = useContext(DataContext)
   const watchIdRef = useRef(null)
   const prevLocationRef = useRef(null)
 
@@ -28,6 +30,7 @@ export default function StartRide() {
       }
       setIsTracking(false)
       setSpeed(0)
+      updateSpeed(0)
       setCurrentLocation(null)
       prevLocationRef.current = null
     } else {
@@ -47,10 +50,14 @@ export default function StartRide() {
 
           setCurrentLocation(newLoc)
           saveToLocalStorage(newLoc)
+          updateLocation(newLoc)   // push to global context → Manager LiveMap
 
           if (prevLocationRef.current) {
             const currentSpeed = calculateSpeed(prevLocationRef.current, newLoc)
             setSpeed(currentSpeed)
+            updateSpeed(currentSpeed)
+          } else {
+            updateSpeed(0)
           }
 
           prevLocationRef.current = newLoc
@@ -100,7 +107,7 @@ export default function StartRide() {
       </div>
 
       <div className="driver-card speed-display">
-        <h3 style={{ margin: '0 0 16px', color: 'rgba(0,0,0,0.6)' }}>Current Speed</h3>
+        <h3 style={{ margin: '0 0 16px', color: 'var(--text-muted)' }}>Current Speed</h3>
         <div className="speed-value">
           {speed.toFixed(1)} <span style={{ fontSize: '1.5rem', fontWeight: 600 }}>km/h</span>
         </div>
@@ -109,7 +116,7 @@ export default function StartRide() {
             {isMoving ? 'Moving' : 'Stopped'}
           </div>
         ) : (
-          <div className="speed-status" style={{ color: 'rgba(0,0,0,0.4)' }}>
+          <div className="speed-status" style={{ color: 'var(--text-muted)' }}>
             Not Recording
           </div>
         )}

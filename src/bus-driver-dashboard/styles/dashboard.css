@@ -3,17 +3,12 @@
 .driver-page {
   min-height: 100vh;
   width: 100%;
-  background: #f8fbff;
-  color: #111;
+  background: var(--bg);
+  color: var(--text);
   display: flex;
   flex-direction: row;
   overflow: hidden;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-body.dark-mode .driver-page {
-  background: #0f0f0f;
-  color: #f5f7ff;
+  transition: var(--transition);
 }
 
 .driver-main {
@@ -31,19 +26,15 @@ body.dark-mode .driver-page {
 }
 
 .driver-card {
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow);
   padding: 28px;
   margin-bottom: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-body.dark-mode .driver-card {
-  background: #141414;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border);
 }
 
 .driver-button {
@@ -53,7 +44,7 @@ body.dark-mode .driver-card {
   border-radius: 12px;
   border: none;
   cursor: pointer;
-  background: #007bff;
+  background: var(--secondary);
   color: #fff;
   transition: transform 0.2s, background 0.2s;
   align-self: center;
@@ -62,7 +53,7 @@ body.dark-mode .driver-card {
 
 .driver-button:hover {
   transform: translateY(-2px);
-  background: #0056d6;
+  background: var(--primary);
 }
 
 .driver-button.active {
@@ -86,7 +77,7 @@ body.dark-mode .driver-card {
 .speed-value {
   font-size: 3.5rem;
   font-weight: 800;
-  color: #007bff;
+  color: var(--secondary);
   line-height: 1;
 }
 
@@ -94,7 +85,7 @@ body.dark-mode .driver-card {
   font-size: 1.25rem;
   font-weight: 600;
   margin-top: 8px;
-  color: #28a745;
+  color: var(--primary);
 }
 
 .speed-status.stopped {

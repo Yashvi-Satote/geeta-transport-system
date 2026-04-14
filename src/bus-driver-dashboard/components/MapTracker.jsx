@@ -71,10 +71,10 @@ export default function MapTracker({ isTracking, currentLocation }) {
       <div className="map-frame" style={{ height: '400px', width: '100%', position: 'relative' }}>
         
         {!currentCenter ? (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8f9fa' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-card)' }}>
             <p style={{ margin: 0, fontSize: '2rem' }}>📍</p>
-            <p style={{ margin: '8px 0 0', fontWeight: 700, color: '#6c757d' }}>Map Offline</p>
-            <p style={{ fontSize: '0.9rem', color: 'rgba(0,0,0,0.5)', marginTop: '8px' }}>
+            <p style={{ margin: '8px 0 0', fontWeight: 700, color: 'var(--text-muted)' }}>Map Offline</p>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '8px' }}>
               Click "Start Ride" to begin broadcasting location
             </p>
           </div>

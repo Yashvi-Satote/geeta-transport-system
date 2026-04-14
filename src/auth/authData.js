@@ -1,0 +1,55 @@
+// Dummy user database — acts as a fake backend
+// Roles: "student" | "driver" | "incharge" | "manager" | "teacher"
+
+export const dummyUsers = [
+  {
+    id: 1,
+    name: 'Rahul Kumar',
+    email: 'student@gmail.com',
+    password: '1234',
+    role: 'student',
+    busNumber: '101',
+    routeName: 'City Center → University',
+    busStop: 'Stop A',
+  },
+  {
+    id: 2,
+    name: 'Driver Ramesh',
+    email: 'driver@gmail.com',
+    password: '1234',
+    role: 'driver',
+    busNumber: '101',
+    routeName: 'City Center → University',
+    busStop: 'N/A',
+  },
+  {
+    id: 3,
+    name: 'Sunita Sharma',
+    email: 'incharge@gmail.com',
+    password: '1234',
+    role: 'incharge',
+    busNumber: '101',
+    routeName: 'City Center → University',
+    busStop: 'N/A',
+  },
+  {
+    id: 4,
+    name: 'Vikram Manager',
+    email: 'manager@gmail.com',
+    password: '1234',
+    role: 'manager',
+    busNumber: 'N/A',
+    routeName: 'N/A',
+    busStop: 'N/A',
+  },
+  {
+    id: 5,
+    name: 'Prof. Anita',
+    email: 'teacher@gmail.com',
+    password: '1234',
+    role: 'teacher',
+    busNumber: 'N/A',
+    routeName: 'N/A',
+    busStop: 'N/A',
+  },
+]
