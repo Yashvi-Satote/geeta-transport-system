@@ -1,0 +1,119 @@
+import { useState, useEffect, useMemo } from 'react'
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
+import { getStoredLocations } from '../utils/geoTracker'
+
+// Fix generic Leaflet icon missing issues in React
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Helper component to center map on new location dynamically
+function MapUpdater({ center }) {
+  const map = useMap();
+  useEffect(() => {
+    if (center && center[0] && center[1]) {
+      map.setView(center, map.getZoom(), { animate: true });
+    }
+  }, [center, map]);
+  return null;
+}
+
+export default function MapTracker({ isTracking, currentLocation }) {
+  const [routeHistory, setRouteHistory] = useState([]);
+
+  // Load offline data on start
+  useEffect(() => {
+    const offlineData = getStoredLocations();
+    setRouteHistory(offlineData);
+  }, []);
+
+  // Update history in real-time
+  useEffect(() => {
+    if (currentLocation) {
+      setRouteHistory(prev => {
+        const now = Date.now();
+        // 30 minutes limit
+        const limitTimestamp = now - 30 * 60 * 1000;
+        
+        let newHistory = [...prev, currentLocation];
+        
+        // Remove points older than 30 mins
+        newHistory = newHistory.filter(loc => loc.timestamp >= limitTimestamp);
+        
+        // Cap maximum points for performance
+        if (newHistory.length > 200) {
+          newHistory = newHistory.slice(newHistory.length - 200);
+        }
+        
+        return newHistory;
+      });
+    }
+  }, [currentLocation]);
+
+  // Derive polyline points
+  const polylinePositions = useMemo(() => {
+    return routeHistory.map(loc => [loc.lat, loc.lng]);
+  }, [routeHistory]);
+
+  const currentCenter = currentLocation 
+    ? [currentLocation.lat, currentLocation.lng] 
+    : routeHistory.length > 0 
+      ? [routeHistory[routeHistory.length-1].lat, routeHistory[routeHistory.length-1].lng]
+      : null;
+
+  return (
+    <div className="driver-card" style={{ padding: 0, overflow: 'hidden' }}>
+      <div className="map-frame" style={{ height: '400px', width: '100%', position: 'relative' }}>
+        
+        {!currentCenter ? (
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8f9fa' }}>
+            <p style={{ margin: 0, fontSize: '2rem' }}>📍</p>
+            <p style={{ margin: '8px 0 0', fontWeight: 700, color: '#6c757d' }}>Map Offline</p>
+            <p style={{ fontSize: '0.9rem', color: 'rgba(0,0,0,0.5)', marginTop: '8px' }}>
+              Click "Start Ride" to begin broadcasting location
+            </p>
+          </div>
+        ) : (
+          <MapContainer 
+            center={currentCenter} 
+            zoom={16} 
+            style={{ height: '100%', width: '100%', zIndex: 1 }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            
+            {/* Auto-pan map as current location updates */}
+            {isTracking && <MapUpdater center={currentCenter} />}
+            
+            {/* Route history Polyline */}
+            {polylinePositions.length > 1 && (
+              <Polyline 
+                positions={polylinePositions} 
+                color="#0066cc" 
+                weight={6} 
+                opacity={0.8}
+                lineCap="round"
+                lineJoin="round"
+              />
+            )}
+
+            {/* Current point marker */}
+            <Marker position={currentCenter}>
+              <Popup>
+                {isTracking ? "Live Location" : "Last Known Location"}<br/>
+                Lat: {currentCenter[0].toFixed(5)}, Lng: {currentCenter[1].toFixed(5)}
+              </Popup>
+            </Marker>
+          </MapContainer>
+        )}
+      </div>
+    </div>
+  )
+}

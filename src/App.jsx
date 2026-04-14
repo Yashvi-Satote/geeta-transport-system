@@ -6,6 +6,7 @@ import BusDriverSignup from './bus-driver-signup/BusDriverSignup.jsx'
 import ManagerSignup from './manager-signup/ManagerSignup.jsx'
 import Dashboard from './dashboard/Dashboard.jsx'
 import BusInchargeDashboard from './bus-incharge-dashboard/pages/Dashboard.jsx'
+import BusDriverDashboard from './bus-driver-dashboard/pages/Dashboard.jsx'
 
 function App() {
   const [page, setPage] = useState('login')
@@ -56,6 +57,8 @@ function App() {
     
     if (userData.role === 'Bus Incharge') {
       setPage('busInchargeDashboard')
+    } else if (userData.role === 'Bus Driver') {
+      setPage('busDriverDashboard')
     } else {
       setPage('dashboard')
     }
@@ -123,6 +126,12 @@ function App() {
       )}
       {page === 'busInchargeDashboard' && (
         <BusInchargeDashboard
+          onLogout={handleBackToLogin}
+          isDarkMode={isDarkMode}
+        />
+      )}
+      {page === 'busDriverDashboard' && (
+        <BusDriverDashboard
           onLogout={handleBackToLogin}
           isDarkMode={isDarkMode}
         />

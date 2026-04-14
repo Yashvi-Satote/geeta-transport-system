@@ -1,0 +1,108 @@
+/* src/bus-driver-dashboard/styles/dashboard.css */
+
+.driver-page {
+  min-height: 100vh;
+  width: 100%;
+  background: #f8fbff;
+  color: #111;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode .driver-page {
+  background: #0f0f0f;
+  color: #f5f7ff;
+}
+
+.driver-main {
+  flex: 1;
+  padding: 32px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.driver-content-wrapper {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.driver-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 28px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+body.dark-mode .driver-card {
+  background: #141414;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.driver-button {
+  padding: 16px 40px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: #007bff;
+  color: #fff;
+  transition: transform 0.2s, background 0.2s;
+  align-self: center;
+  box-shadow: 0 4px 14px rgba(0, 123, 255, 0.3);
+}
+
+.driver-button:hover {
+  transform: translateY(-2px);
+  background: #0056d6;
+}
+
+.driver-button.active {
+  background: #dc3545;
+  box-shadow: 0 4px 14px rgba(220, 53, 69, 0.3);
+}
+
+.driver-button.active:hover {
+  background: #c82333;
+}
+
+.speed-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.speed-value {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #007bff;
+  line-height: 1;
+}
+
+.speed-status {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 8px;
+  color: #28a745;
+}
+
+.speed-status.stopped {
+  color: #dc3545;
+}
+
+@media (max-width: 900px) {
+  .driver-page {
+    flex-direction: column;
+  }
+}
