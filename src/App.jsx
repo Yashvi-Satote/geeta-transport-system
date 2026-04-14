@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Signup from './components/Signup.jsx'
 import StudentSignup from './student sign up/StudentSignup.jsx'
 import TeacherSignup from './teacher-signup/TeacherSignup.jsx'
+import BusDriverSignup from './bus-driver-signup/BusDriverSignup.jsx'
+import ManagerSignup from './manager-signup/ManagerSignup.jsx'
 import Dashboard from './student sign up/Dashboard.jsx'
 
 function App() {
@@ -24,6 +26,16 @@ function App() {
     setPage('teacherSignup')
   }
 
+  const handleBusDriverClick = () => {
+    setRole('Bus Driver')
+    setPage('busDriverSignup')
+  }
+
+  const handleManagerClick = () => {
+    setRole('Manager')
+    setPage('managerSignup')
+  }
+
   const handleSignupComplete = (data) => {
     setStudentName(data.name || 'User')
     setPage('dashboard')
@@ -40,6 +52,8 @@ function App() {
           onStudentClick={handleStudentClick}
           onTeacherClick={handleTeacherClick}
           onBusInchargeClick={handleBusInchargeClick}
+          onBusDriverClick={handleBusDriverClick}
+          onManagerClick={handleManagerClick}
           isDarkMode={isDarkMode}
           setIsDarkMode={setIsDarkMode}
         />
@@ -54,6 +68,20 @@ function App() {
       {page === 'teacherSignup' && (
         <TeacherSignup
           role={role}
+          onSignupComplete={handleSignupComplete}
+          onBack={handleBackToLogin}
+          isDarkMode={isDarkMode}
+        />
+      )}
+      {page === 'busDriverSignup' && (
+        <BusDriverSignup
+          onSignupComplete={handleSignupComplete}
+          onBack={handleBackToLogin}
+          isDarkMode={isDarkMode}
+        />
+      )}
+      {page === 'managerSignup' && (
+        <ManagerSignup
           onSignupComplete={handleSignupComplete}
           onBack={handleBackToLogin}
           isDarkMode={isDarkMode}

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 
-function Signup({ onStudentClick, onTeacherClick, onBusInchargeClick, isDarkMode, setIsDarkMode }) {
+function Signup({ onStudentClick, onTeacherClick, onBusInchargeClick, onBusDriverClick, onManagerClick, isDarkMode, setIsDarkMode }) {
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
   }
@@ -30,8 +30,8 @@ function Signup({ onStudentClick, onTeacherClick, onBusInchargeClick, isDarkMode
           </button>
           <button className="role-button" onClick={onTeacherClick}>Teacher</button>
           <button className="role-button" onClick={onBusInchargeClick}>Bus Incharge</button>
-          <button className="role-button">Bus Driver</button>
-          <button className="role-button">Manager</button>
+          <button className="role-button" onClick={onBusDriverClick}>Bus Driver</button>
+          <button className="role-button" onClick={onManagerClick}>Manager</button>
         </div>
       </div>
     </div>
