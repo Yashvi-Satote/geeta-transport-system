@@ -197,7 +197,22 @@ body.student-dark-mode .dashboard-text {
   }
 }
 
+@media (max-width: 768px) {
+  .student-signup-page {
+    padding: 16px;
+  }
+
+  .signup-card {
+    padding: 28px;
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 560px) {
+  .student-signup-page {
+    padding: 12px;
+  }
+
   .signup-card {
     padding: 24px;
   }

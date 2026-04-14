@@ -164,7 +164,22 @@ body.dark-mode .back-button {
   }
 }
 
+@media (max-width: 768px) {
+  .manager-signup-page {
+    padding: 16px;
+  }
+
+  .signup-card {
+    padding: 28px;
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 560px) {
+  .manager-signup-page {
+    padding: 12px;
+  }
+
   .signup-card {
     padding: 24px;
   }
