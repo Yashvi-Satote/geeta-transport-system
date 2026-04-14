@@ -21,23 +21,99 @@ body.dark-mode .dashboard-page {
 .main-content {
   flex: 1;
   width: 100%;
-  padding: 24px;
+  padding: 32px 24px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-.dashboard-panel,
+.main-content > * {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.dashboard-content,
+.info-card,
+.analytics-card,
+.analytics-placeholder,
 .dashboard-map-section {
   background: #ffffff;
-  border-radius: 24px;
-  box-shadow: 0 24px 60px rgba(8, 50, 110, 0.12);
-  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* subtle shadow */
+  padding: 24px; /* padding inside content cards */
+  margin-bottom: 24px; /* margin between sections */
   transition: background 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-body.dark-mode .dashboard-panel,
+body.dark-mode .dashboard-content,
+body.dark-mode .info-card,
+body.dark-mode .analytics-card,
+body.dark-mode .analytics-placeholder,
 body.dark-mode .dashboard-map-section {
   background: #141414;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.info-cards,
+.analytics-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.info-header,
+.analytics-header {
+  margin-bottom: 24px;
+}
+
+.info-title,
+.analytics-title {
+  margin: 0 0 8px;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.info-subtitle,
+.analytics-subtitle {
+  margin: 0;
+  color: rgba(0,0,0,0.6);
+  font-size: 1.1rem;
+}
+body.dark-mode .info-subtitle,
+body.dark-mode .analytics-subtitle {
+  color: rgba(255,255,255,0.65);
+}
+
+.info-card-header,
+.analytics-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding-bottom: 16px;
+}
+
+body.dark-mode .info-card-header,
+body.dark-mode .analytics-card-header {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.info-card-title,
+.analytics-card-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.info-card-content,
+.analytics-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .panel-header {
@@ -71,7 +147,6 @@ body.dark-mode .panel-subtitle {
   font-weight: 700;
 }
 
-.info-card,
 .meta-card {
   display: grid;
   gap: 16px;

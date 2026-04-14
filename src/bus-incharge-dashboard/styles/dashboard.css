@@ -1,0 +1,242 @@
+.bus-incharge-page {
+  min-height: 100vh;
+  width: 100%;
+  background: #f8fbff;
+  color: #111;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode .bus-incharge-page {
+  background: #0f0f0f;
+  color: #f5f7ff;
+}
+
+.bus-main-content {
+  flex: 1;
+  width: 100%;
+  padding: 32px 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.bus-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Sidebar Styles */
+.bus-sidebar {
+  width: 260px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px;
+  z-index: 10;
+}
+
+body.dark-mode .bus-sidebar {
+  background: rgba(15, 15, 15, 0.7);
+  border-right-color: rgba(255, 255, 255, 0.05);
+}
+
+.bus-sidebar-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #007bff;
+  margin-bottom: 40px;
+  padding-left: 12px;
+}
+
+.bus-nav-button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 14px 16px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+body.dark-mode .bus-nav-button {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.bus-nav-button:hover {
+  background: rgba(0, 123, 255, 0.08);
+  color: #007bff;
+}
+
+.bus-nav-button.active {
+  background: #007bff;
+  color: #fff;
+}
+
+.bus-nav-button.logout {
+  margin-top: auto;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  color: #111;
+}
+
+body.dark-mode .bus-nav-button.logout {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* Card Styles */
+.bus-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 28px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+body.dark-mode .bus-card {
+  background: #141414;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.bus-header {
+  margin-bottom: 30px;
+}
+
+.bus-title {
+  margin: 0 0 8px;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.bus-subtitle {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 1.1rem;
+}
+
+body.dark-mode .bus-subtitle {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Specific component styles */
+.map-frame {
+  min-height: 500px;
+  background: #e2eaf8;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0,0,0,0.5);
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+body.dark-mode .map-frame {
+  background: #0b0b0b;
+  color: rgba(255,255,255,0.4);
+}
+
+/* Forms and Inputs */
+.bus-select, .bus-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.15);
+  font-size: 1rem;
+  background: #fff;
+  color: #111;
+  margin-bottom: 16px;
+}
+
+body.dark-mode .bus-select,
+body.dark-mode .bus-input {
+  background: #1a1a1a;
+  border-color: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+.bus-btn {
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.bus-btn:hover {
+  background: #0056d6;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .bus-incharge-page {
+    flex-direction: column;
+  }
+  .bus-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 16px;
+  }
+  .bus-nav-button {
+    text-align: center;
+    padding: 10px;
+  }
+  .bus-sidebar-logo {
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 0;
+  }
+  .bus-main-content {
+    padding: 16px;
+  }
+}
+
+.student-list-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  align-items: center;
+}
+
+body.dark-mode .student-list-item {
+  border-bottom-color: rgba(255,255,255,0.05);
+}
+
+.student-list-item:last-child {
+  border-bottom: none;
+}
+
+.speed-metric {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #007bff;
+}
+
+.success-message {
+  padding: 16px;
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}

@@ -5,6 +5,7 @@ import TeacherSignup from './teacher-signup/TeacherSignup.jsx'
 import BusDriverSignup from './bus-driver-signup/BusDriverSignup.jsx'
 import ManagerSignup from './manager-signup/ManagerSignup.jsx'
 import Dashboard from './dashboard/Dashboard.jsx'
+import BusInchargeDashboard from './bus-incharge-dashboard/pages/Dashboard.jsx'
 
 function App() {
   const [page, setPage] = useState('login')
@@ -52,7 +53,12 @@ function App() {
     }
     setUserDetails(userData)
     localStorage.setItem('user', JSON.stringify(userData))
-    setPage('dashboard')
+    
+    if (userData.role === 'Bus Incharge') {
+      setPage('busInchargeDashboard')
+    } else {
+      setPage('dashboard')
+    }
   }
 
   const handleBackToLogin = () => {
@@ -111,6 +117,12 @@ function App() {
       )}
       {page === 'dashboard' && (
         <Dashboard
+          onLogout={handleBackToLogin}
+          isDarkMode={isDarkMode}
+        />
+      )}
+      {page === 'busInchargeDashboard' && (
+        <BusInchargeDashboard
           onLogout={handleBackToLogin}
           isDarkMode={isDarkMode}
         />
