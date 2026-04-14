@@ -3,11 +3,13 @@
 }
 
 .student-signup-page {
-  min-height: 100vh;
+  height: 100vh;
+  width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 0;
   background: #f8fbff;
   color: #111;
   transition: background 0.3s ease, color 0.3s ease;
@@ -20,10 +22,11 @@ body.dark-mode .student-signup-page {
 
 .signup-card {
   width: 100%;
-  max-width: 520px;
+  max-width: none;
+  height: 100%;
   background: #ffffff;
-  border-radius: 16px;
-  padding: 32px;
+  border-radius: 0;
+  padding: 0;
   box-shadow: 0 24px 60px rgba(8, 50, 110, 0.12);
   display: flex;
   flex-direction: column;

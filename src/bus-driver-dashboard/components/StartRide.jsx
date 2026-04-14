@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext } from 'react'
 import { calculateSpeed, saveToLocalStorage } from '../utils/geoTracker'
-import MapTracker from './MapTracker'
+import SharedMap from '../../shared/components/SharedMap'
 import { DataContext } from '../../shared/DataContext'
 
 export default function StartRide() {
@@ -122,7 +122,7 @@ export default function StartRide() {
         )}
       </div>
 
-      <MapTracker isTracking={isTracking} currentLocation={currentLocation} />
+      <SharedMap mode="single" isTracking={isTracking} />
     </div>
   )
 }

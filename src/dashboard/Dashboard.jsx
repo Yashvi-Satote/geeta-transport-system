@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
 import Sidebar from './Sidebar.jsx'
 import MapView from './MapView.jsx'
@@ -6,28 +6,9 @@ import Information from './Information.jsx'
 import Analytics from './Analytics.jsx'
 import './dashboard.css'
 
-const DEFAULT_CENTER = [29.3909, 76.9655]
-const DEFAULT_STOP = [29.3916, 76.9662]
-const DEFAULT_BUS = [29.3950, 76.9700]
-
 function Dashboard({ onLogout, userDetails = {} }) {
   const { t } = useLanguage()
   const [activeTab, setActiveTab] = useState('dashboard')
-  const [isTracking, setIsTracking] = useState(false)
-  const [busPosition, setBusPosition] = useState(DEFAULT_BUS)
-
-  useEffect(() => {
-    if (!isTracking) return undefined
-
-    const animation = setInterval(() => {
-      setBusPosition((current) => ({
-        lat: current.lat + 0.00008,
-        lng: current.lng + 0.00012,
-      }))
-    }, 1200)
-
-    return () => clearInterval(animation)
-  }, [isTracking])
 
   const handleLogout = () => {
     onLogout()
@@ -45,7 +26,7 @@ function Dashboard({ onLogout, userDetails = {} }) {
               </div>
             </div>
             <div className="map-frame">
-              <MapView center={DEFAULT_CENTER} busPosition={busPosition} stopPosition={DEFAULT_STOP} />
+              <MapView />
             </div>
           </div>
         )
