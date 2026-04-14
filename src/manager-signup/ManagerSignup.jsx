@@ -27,7 +27,13 @@ function ManagerSignup({ onSignupComplete, onBack, isDarkMode }) {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    onSignupComplete({ name: formData.name || 'Manager' })
+    onSignupComplete({
+      name: formData.name || 'Manager',
+      role: 'Manager',
+      busNumber: 'N/A',
+      routeName: 'N/A',
+      busStop: 'N/A',
+    })
   }
 
   return (

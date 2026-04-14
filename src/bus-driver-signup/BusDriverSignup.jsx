@@ -27,7 +27,13 @@ function BusDriverSignup({ onSignupComplete, onBack, isDarkMode }) {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    onSignupComplete({ name: formData.name || 'Bus Driver' })
+    onSignupComplete({
+      name: formData.name || 'Bus Driver',
+      role: 'Bus Driver',
+      busNumber: formData.busNumber || 'N/A',
+      routeName: formData.routeName || 'N/A',
+      busStop: 'Driver route',
+    })
   }
 
   return (

@@ -31,7 +31,13 @@ function StudentSignup({ onSignupComplete, onBack, isDarkMode }) {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    onSignupComplete({ name: formData.name || 'Student' })
+    onSignupComplete({
+      name: formData.name || 'Student',
+      role: 'Student',
+      busNumber: formData.busNumber || 'N/A',
+      routeName: formData.routeName || 'N/A',
+      busStop: formData.busStop || 'N/A',
+    })
   }
 
   return (
