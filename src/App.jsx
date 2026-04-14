@@ -7,6 +7,7 @@ import ManagerSignup from './manager-signup/ManagerSignup.jsx'
 import Dashboard from './dashboard/Dashboard.jsx'
 import BusInchargeDashboard from './bus-incharge-dashboard/pages/Dashboard.jsx'
 import BusDriverDashboard from './bus-driver-dashboard/pages/Dashboard.jsx'
+import { DataProvider } from './shared/DataContext.jsx'
 
 function App() {
   const [page, setPage] = useState('login')
@@ -77,7 +78,7 @@ function App() {
   }
 
   return (
-    <>
+    <DataProvider>
       {page === 'login' && (
         <Signup
           onStudentClick={handleStudentClick}
@@ -136,7 +137,7 @@ function App() {
           isDarkMode={isDarkMode}
         />
       )}
-    </>
+    </DataProvider>
   )
 }
 

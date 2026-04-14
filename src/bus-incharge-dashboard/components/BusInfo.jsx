@@ -1,4 +1,8 @@
-export default function BusInfo({ buses }) {
+import { useContext } from 'react'
+import { DataContext } from '../../shared/DataContext'
+
+export default function BusInfo() {
+  const { buses } = useContext(DataContext)
   return (
     <div>
       <div className="bus-header">

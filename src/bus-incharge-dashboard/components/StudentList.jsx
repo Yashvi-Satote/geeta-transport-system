@@ -1,7 +1,15 @@
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
+import { DataContext } from '../../shared/DataContext'
 
-export default function StudentList({ students, buses }) {
-  const [selectedBus, setSelectedBus] = useState(buses[0]?.busNumber || '')
+export default function StudentList() {
+  const { students, buses } = useContext(DataContext)
+  const [selectedBus, setSelectedBus] = useState('')
+
+  useEffect(() => {
+    if (buses.length > 0 && !selectedBus) {
+      setSelectedBus(buses[0].busNumber)
+    }
+  }, [buses, selectedBus])
 
   const filteredStudents = students.filter(s => s.busNumber === selectedBus)
 

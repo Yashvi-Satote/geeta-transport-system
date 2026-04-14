@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { DataContext } from '../../shared/DataContext'
 
-export default function MergeBus({ buses, students, onMerge }) {
+export default function MergeBus() {
+  const { buses, mergeStudents } = useContext(DataContext)
+  
   const [sourceBus, setSourceBus] = useState('')
   const [targetBus, setTargetBus] = useState('')
   const [stop, setStop] = useState('')
@@ -21,8 +24,8 @@ export default function MergeBus({ buses, students, onMerge }) {
       return
     }
 
-    // Call upstream handler
-    onMerge(sourceBus, targetBus, stop, type)
+    // Call global handler
+    mergeStudents(sourceBus, targetBus, stop, type)
     
     setMessage(`Successfully assigned students from Bus ${sourceBus} (${stop}) to Bus ${targetBus} (${type}).`)
     // Reset selection after giving user feedback

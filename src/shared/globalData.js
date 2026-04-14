@@ -1,4 +1,5 @@
-export const initialData = {
+// export standard data points that will populate Context API State
+export const initialSharedData = {
   buses: [
     {
       busNumber: '101',
@@ -16,5 +17,6 @@ export const initialData = {
     { id: 2, name: 'Priya', busNumber: '101', stop: 'Stop B' },
     { id: 3, name: 'Aman', busNumber: '202', stop: 'Stop D' },
     { id: 4, name: 'Sneha', busNumber: '202', stop: 'Stop B' },
-  ]
+  ],
+  driverLocation: null // the global trackable location for all drivers
 };
