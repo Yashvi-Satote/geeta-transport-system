@@ -17,16 +17,18 @@
 .bus-main-content {
   flex: 1;
   width: 100%;
-  padding: 32px 24px;
-  overflow-y: auto;
+  padding: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .bus-container {
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Sidebar Styles */

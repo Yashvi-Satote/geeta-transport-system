@@ -23,6 +23,18 @@ function MapUpdater({ center }) {
   return null;
 }
 
+function MapFixer() {
+  const map = useMap()
+  useEffect(() => {
+    map.invalidateSize()
+    const timer = setTimeout(() => {
+      map.invalidateSize()
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [map])
+  return null
+}
+
 export default function MapTracker({ isTracking, currentLocation }) {
   const [routeHistory, setRouteHistory] = useState([]);
 
@@ -64,55 +76,64 @@ export default function MapTracker({ isTracking, currentLocation }) {
     ? [currentLocation.lat, currentLocation.lng] 
     : routeHistory.length > 0 
       ? [routeHistory[routeHistory.length-1].lat, routeHistory[routeHistory.length-1].lng]
-      : null;
+      : [29.3909, 76.9690]; // Geeta University fallback
 
   return (
     <div className="driver-card" style={{ padding: 0, overflow: 'hidden' }}>
       <div className="map-frame" style={{ height: '400px', width: '100%', position: 'relative' }}>
-        
-        {!currentCenter ? (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-card)' }}>
-            <p style={{ margin: 0, fontSize: '2rem' }}>📍</p>
-            <p style={{ margin: '8px 0 0', fontWeight: 700, color: 'var(--text-muted)' }}>Map Offline</p>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '8px' }}>
-              Click "Start Ride" to begin broadcasting location
-            </p>
-          </div>
-        ) : (
-          <MapContainer 
-            center={currentCenter} 
-            zoom={16} 
-            style={{ height: '100%', width: '100%', zIndex: 1 }}
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        <MapContainer 
+          center={currentCenter} 
+          zoom={16} 
+          style={{ height: '100%', width: '100%', zIndex: 1 }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <MapFixer />
+          
+          {/* Auto-pan map as current location updates */}
+          {isTracking && <MapUpdater center={currentCenter} />}
+          
+          {/* Route history Polyline */}
+          {polylinePositions.length > 1 && (
+            <Polyline 
+              positions={polylinePositions} 
+              color="#0066cc" 
+              weight={6} 
+              opacity={0.8}
+              lineCap="round"
+              lineJoin="round"
             />
-            
-            {/* Auto-pan map as current location updates */}
-            {isTracking && <MapUpdater center={currentCenter} />}
-            
-            {/* Route history Polyline */}
-            {polylinePositions.length > 1 && (
-              <Polyline 
-                positions={polylinePositions} 
-                color="#0066cc" 
-                weight={6} 
-                opacity={0.8}
-                lineCap="round"
-                lineJoin="round"
-              />
-            )}
+          )}
 
-            {/* Current point marker */}
-            <Marker position={currentCenter}>
-              <Popup>
-                {isTracking ? "Live Location" : "Last Known Location"}<br/>
-                Lat: {currentCenter[0].toFixed(5)}, Lng: {currentCenter[1].toFixed(5)}
-              </Popup>
-            </Marker>
-          </MapContainer>
-        )}
+          {/* Current point marker */}
+          <Marker position={currentCenter}>
+            <Popup>
+              {isTracking ? "Live Location" : "Last Known Location"}<br/>
+              Lat: {currentCenter[0].toFixed(5)}, Lng: {currentCenter[1].toFixed(5)}
+            </Popup>
+          </Marker>
+
+          {!isTracking && routeHistory.length === 0 && (
+            <div style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              zIndex: 1000,
+              background: 'var(--bg-card)',
+              padding: '10px 16px',
+              borderRadius: '8px',
+              border: '1px solid var(--border)',
+              boxShadow: 'var(--shadow)',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              color: 'var(--text-muted)'
+            }}>
+              Map Offline - Start Ride to Track
+            </div>
+          )}
+        </MapContainer>
       </div>
     </div>
   )

@@ -18,16 +18,8 @@ function Dashboard({ onLogout, userDetails = {} }) {
     switch (activeTab) {
       case 'dashboard':
         return (
-          <div className="dashboard-content">
-            <div className="map-header">
-              <div>
-                <p className="map-title">{t('liveRouteOverview')}</p>
-                <p className="map-text">{t('mapDescription')}</p>
-              </div>
-            </div>
-            <div className="map-frame">
-              <MapView />
-            </div>
+          <div className="dashboard-content" style={{ height: '100%' }}>
+            <MapView />
           </div>
         )
       case 'analytics':

@@ -180,6 +180,35 @@ body.dark-mode .back-button {
   text-align: center;
 }
 
+.student-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+.student-header {
+  flex-shrink: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card, #ffffff);
+  border-bottom: 1px solid var(--border, rgba(0,0,0,0.1));
+}
+
+.logout-btn {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+}
+
+.student-map-container {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
 .dashboard-text {
   color: rgba(17, 24, 39, 0.8);
   line-height: 1.6;

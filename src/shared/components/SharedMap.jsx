@@ -52,7 +52,7 @@ function MapUpdater({ center, zoom = 16 }) {
 }
 
 // Helper to fit bounds for multiple markers
-  function MapBounds({ positions }) {
+function MapBounds({ positions }) {
   const map = useMap()
   useEffect(() => {
     if (positions && positions.length > 0) {
@@ -63,16 +63,18 @@ function MapUpdater({ center, zoom = 16 }) {
   return null
 }
 
-  function MapFixer() {
-    const map = useMap()
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        map.invalidateSize()
-      }, 100)
-      return () => clearTimeout(timer)
-    }, [map])
-    return null
-  }
+function MapFixer() {
+  const map = useMap()
+  useEffect(() => {
+    // Immediate resize plus a delayed one to handle all layout shifts
+    map.invalidateSize()
+    const timer = setTimeout(() => {
+      map.invalidateSize()
+    }, 200)
+    return () => clearTimeout(timer)
+  }, [map])
+  return null
+}
 
 /**
  * SharedMap Component
@@ -99,17 +101,17 @@ export default function SharedMap({ mode = 'single', assignedBusNumber = null, i
       setRouteHistory(prev => {
         const now = Date.now()
         const limitTimestamp = now - 30 * 60 * 1000 // 30 minutes
-        
+
         let newHistory = [...prev, driverLocation]
-        
+
         // Remove points older than 30 minutes
         newHistory = newHistory.filter(loc => loc.timestamp >= limitTimestamp)
-        
+
         // Cap maximum points for performance
         if (newHistory.length > 200) {
           newHistory = newHistory.slice(newHistory.length - 200)
         }
-        
+
         return newHistory
       })
     }
@@ -120,12 +122,12 @@ export default function SharedMap({ mode = 'single', assignedBusNumber = null, i
   // ==================
   const singleModeData = useMemo(() => {
     if (mode !== 'single') return null
-    
+
     const currentCenter = driverLocation
       ? [driverLocation.lat, driverLocation.lng]
       : routeHistory.length > 0
         ? [routeHistory[routeHistory.length - 1].lat, routeHistory[routeHistory.length - 1].lng]
-        : null
+        : [29.3909, 76.9690] // Geeta University default
 
     const polylinePositions = routeHistory.map(loc => [loc.lat, loc.lng])
 
@@ -137,7 +139,7 @@ export default function SharedMap({ mode = 'single', assignedBusNumber = null, i
       currentCenter,
       polylinePositions,
       assignedBus,
-      hasData: currentCenter !== null
+      hasData: !!driverLocation || routeHistory.length > 0
     }
   }, [mode, driverLocation, routeHistory, assignedBusNumber, buses])
 
@@ -151,23 +153,29 @@ export default function SharedMap({ mode = 'single', assignedBusNumber = null, i
     if (!driverLocation) {
       return {
         busMarkers: [],
-        centerPosition: [20.5937, 78.9629], // India center fallback
+        centerPosition: [29.3909, 76.9690], // Geeta University fallback
         hasData: false
       }
     }
 
-    const busMarkers = buses.map((bus, idx) => ({
+    const busMarkers = driverLocation ? buses.map((bus, idx) => ({
       busNumber: bus.busNumber,
       route: bus.route,
       lat: driverLocation.lat + idx * 0.002,
       lng: driverLocation.lng + idx * 0.002,
       color: BUS_COLORS[idx % BUS_COLORS.length],
-    }))
+    })) : [{
+      busNumber: 'GU-01',
+      route: 'Campus Default',
+      lat: 29.3909,
+      lng: 76.9690,
+      color: BUS_COLORS[0],
+    }]
 
     return {
       busMarkers,
-      centerPosition: [busMarkers[0].lat, busMarkers[0].lng],
-      hasData: busMarkers.length > 0
+      centerPosition: busMarkers[0] ? [busMarkers[0].lat, busMarkers[0].lng] : [29.3909, 76.9690],
+      hasData: true
     }
   }, [mode, driverLocation, buses])
 
@@ -178,106 +186,102 @@ export default function SharedMap({ mode = 'single', assignedBusNumber = null, i
     const { currentCenter, polylinePositions, assignedBus, hasData } = singleModeData
 
     return (
-      <div>
-        <div className="bus-header">
-          <h1 className="bus-title">🗺️ Live Map</h1>
-          <p className="bus-subtitle">
-            {hasData && isTracking ? (
-              <><span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#00ff00', borderRadius: '50%', marginRight: '8px' }}></span>Live tracking active</>
-            ) : hasData ? (
-              'Last known location'
-            ) : (
-              'Map offline'
-            )}
-          </p>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
+        <div className="map-frame" style={{ flex: 1, width: '100%', position: 'relative' }}>
+          <MapContainer
+            center={currentCenter}
+            zoom={16}
+            style={{ height: '100%', width: '100%' }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MapFixer />
 
-        <div className="bus-card" style={{ padding: 0, overflow: 'hidden' }}>
-          <div className="map-frame" style={{ height: '100%', width: '100%', position: 'relative' }}>
-            
-            {!hasData ? (
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'var(--bg-card)',
-                color: 'var(--text-muted)'
-              }}>
-                <p style={{ margin: 0, fontSize: '2rem' }}>📍</p>
-                <p style={{ margin: '8px 0 0', fontWeight: 700, fontSize: '1.1rem', color: 'var(--text)' }}>
-                  Map Offline
-                </p>
-                <p style={{ fontSize: '0.9rem', marginTop: '8px' }}>
-                  {assignedBus ? 'Start ride to broadcast location' : 'No bus assigned'}
-                </p>
-              </div>
-            ) : (
-              <MapContainer
-                center={currentCenter}
-                zoom={16}
-                style={{ height: '100%', width: '100%', borderRadius: '12px' }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <MapFixer />
-
-                
-                {/* Auto-pan when tracking */}
-                {isTracking && <MapUpdater center={currentCenter} />}
-                
-                {/* Route history polyline */}
-                {polylinePositions.length > 1 && (
-                  <Polyline
-                    positions={polylinePositions}
-                    color="#0066cc"
-                    weight={4}
-                    opacity={0.7}
-                    dashArray="5, 5"
-                  />
+            {/* Header Overlay */}
+            <div style={{
+              position: 'absolute',
+              top: '20px',
+              left: '20px',
+              zIndex: 1000,
+              background: 'var(--bg-surface)',
+              padding: '12px 20px',
+              borderRadius: '12px',
+              boxShadow: 'var(--shadow)',
+              border: '1px solid var(--border)',
+              pointerEvents: 'none'
+            }}>
+              <h1 className="bus-title" style={{ margin: 0, fontSize: '1.4rem' }}>🗺️ Live Map</h1>
+              <p className="bus-subtitle" style={{ margin: '4px 0 0', fontSize: '0.85rem' }}>
+                {hasData && isTracking ? (
+                  <><span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#00ff00', borderRadius: '50%', marginRight: '8px' }}></span>Live tracking active</>
+                ) : hasData ? (
+                  'Last known location'
+                ) : (
+                  'Map offline'
                 )}
-                
-                {/* Current location marker */}
-                <Marker position={currentCenter}>
-                  <Popup>
-                    <div>
-                      <strong>{assignedBus?.busNumber || 'Bus'}</strong><br />
-                      Route: {assignedBus?.route || 'N/A'}<br />
-                      <small>Current Position</small>
-                    </div>
-                  </Popup>
-                </Marker>
-              </MapContainer>
-            )}
-          </div>
+              </p>
+            </div>
 
+            {/* Auto-pan when tracking */}
+            {isTracking && <MapUpdater center={currentCenter} />}
+
+            {/* Route history polyline */}
+            {polylinePositions.length > 1 && (
+              <Polyline
+                positions={polylinePositions}
+                color="#0066cc"
+                weight={4}
+                opacity={0.7}
+                dashArray="5, 5"
+              />
+            )}
+
+            {/* Current location marker */}
+            <Marker position={currentCenter}>
+              <Popup>
+                <div>
+                  <strong>{assignedBus?.busNumber || 'Bus'}</strong><br />
+                  Route: {assignedBus?.route || 'N/A'}<br />
+                  <small>Current Position</small>
+                </div>
+              </Popup>
+            </Marker>
+          </MapContainer>
+
+          {/* Bus Info Bottom Bar */}
           {assignedBus && hasData && (
-            <div style={{ padding: '16px', borderTop: '1px solid var(--border)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+            <div style={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '20px',
+              right: '20px',
+              zIndex: 1000,
+              background: 'var(--bg-surface)',
+              padding: '16px 24px',
+              borderRadius: '14px',
+              boxShadow: 'var(--shadow)',
+              border: '1px solid var(--border)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <div style={{ display: 'flex', gap: '24px' }}>
                 <div>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)' }}>Bus Number</p>
-                  <p style={{ margin: '4px 0 0', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>
-                    {assignedBus.busNumber}
-                  </p>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Bus Number</p>
+                  <p style={{ margin: '2px 0 0', fontSize: '1.1rem', fontWeight: 800, color: 'var(--secondary)' }}>{assignedBus.busNumber}</p>
                 </div>
                 <div>
-                  <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)' }}>Route</p>
-                  <p style={{ margin: '4px 0 0', fontSize: '1rem', color: 'var(--text)' }}>
-                    {assignedBus.route}
-                  </p>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Route</p>
+                  <p style={{ margin: '2px 0 0', fontSize: '1.0rem', fontWeight: 600 }}>{assignedBus.route}</p>
                 </div>
-                {polylinePositions.length > 0 && (
-                  <div>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)' }}>Trail Duration</p>
-                    <p style={{ margin: '4px 0 0', fontSize: '0.9rem', color: 'var(--primary)' }}>
-                      Last 30 min
-                    </p>
-                  </div>
-                )}
               </div>
+              {polylinePositions.length > 0 && (
+                <div style={{ background: 'rgba(255, 122, 0, 0.1)', padding: '6px 12px', borderRadius: '8px', border: '1px solid rgba(255, 122, 0, 0.2)' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)' }}>Live Trail Active</span>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -292,82 +296,109 @@ export default function SharedMap({ mode = 'single', assignedBusNumber = null, i
     const { busMarkers, centerPosition, hasData } = multipleModeData
 
     return (
-      <div>
-        <div className="mgr-header">
-          <h1 className="mgr-title">🗺️ Live Fleet Map</h1>
-          <p className="mgr-subtitle">
-            {hasData ? (
-              <><span className="mgr-live-dot" style={{ display: 'inline-block', width: '8px', height: '8px', background: '#00ff00', borderRadius: '50%', marginRight: '8px' }}></span>All buses tracked in real-time</>
-            ) : (
-              'Waiting for driver to start ride...'
-            )}
-          </p>
-        </div>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative' }}>
+        <div className="map-frame" style={{ flex: 1, width: '100%', position: 'relative' }}>
+          <MapContainer
+            center={centerPosition}
+            zoom={14}
+            style={{ height: '100%', width: '100%' }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MapFixer />
 
-        <div className="mgr-card" style={{ padding: 0, overflow: 'hidden' }}>
-          <div style={{ height: '100%', width: '100%' }}>
-            {!hasData ? (
+            {/* Header Overlay */}
+            <div style={{
+              position: 'absolute',
+              top: '20px',
+              left: '20px',
+              zIndex: 1000,
+              background: 'var(--bg-surface)',
+              padding: '12px 20px',
+              borderRadius: '12px',
+              boxShadow: 'var(--shadow)',
+              border: '1px solid var(--border)',
+              pointerEvents: 'none'
+            }}>
+              <h1 className="mgr-title" style={{ margin: 0, fontSize: '1.4rem' }}>🗺️ Live Fleet Map</h1>
+              <p className="mgr-subtitle" style={{ margin: '4px 0 0', fontSize: '0.85rem' }}>
+                {hasData ? (
+                  <><span className="mgr-live-dot" style={{ display: 'inline-block', width: '8px', height: '8px', background: '#00ff00', borderRadius: '50%', marginRight: '8px' }}></span>All buses tracked in real-time</>
+                ) : (
+                  'Waiting for live telemetry...'
+                )}
+              </p>
+            </div>
+
+            {/* Fit bounds to show all buses */}
+            {hasData && <MapBounds positions={busMarkers} />}
+
+            {/* Bus markers */}
+            {busMarkers.map(bus => (
+              <Marker key={bus.busNumber} position={[bus.lat, bus.lng]} icon={buildColorIcon(bus.color)}>
+                <Popup>
+                  <div>
+                    <strong>Bus {bus.busNumber}</strong><br />
+                    Route: {bus.route}<br />
+                    <small>Live Location</small>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+
+            {!hasData && (
               <div style={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
+                position: 'absolute',
+                top: '90px',
+                left: '20px',
+                zIndex: 1000,
                 background: 'var(--bg-card)',
-                color: 'var(--text-muted)'
+                padding: '12px 20px',
+                borderRadius: '10px',
+                border: '1px solid var(--border)',
+                boxShadow: 'var(--shadow)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                fontSize: '0.9rem',
+                fontWeight: 600,
+                color: 'var(--text)'
               }}>
-                <div style={{ fontSize: '3rem', marginBottom: '16px' }}>📡</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)' }}>
-                  No Live Data Yet
-                </div>
-                <div style={{ fontSize: '0.9rem', marginTop: '8px' }}>
-                  Bus driver must start a ride to broadcast location
-                </div>
+                <span style={{ fontSize: '1.2rem' }}>📡</span>
+                No active rides broadcasting location
               </div>
-            ) : (
-              <MapContainer
-                center={centerPosition}
-                zoom={14}
-                style={{ height: '100%', width: '100%', borderRadius: '12px' }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                
-                {/* Fit bounds to show all buses */}
-                <MapBounds positions={busMarkers} />
-                
-                {/* Bus markers */}
-                {busMarkers.map(bus => (
-                  <Marker key={bus.busNumber} position={[bus.lat, bus.lng]} icon={buildColorIcon(bus.color)}>
-                    <Popup>
-                      <div>
-                        <strong>Bus {bus.busNumber}</strong><br />
-                        Route: {bus.route}<br />
-                        <small>Live Location</small>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
             )}
-          </div>
+          </MapContainer>
 
-          {/* Bus legend */}
+          {/* Bus Legend Bar */}
           {hasData && (
-            <div style={{ padding: '16px', borderTop: '1px solid var(--border)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px' }}>
+            <div style={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '20px',
+              right: '20px',
+              zIndex: 1000,
+              background: 'var(--bg-surface)',
+              padding: '12px 20px',
+              borderRadius: '14px',
+              boxShadow: 'var(--shadow)',
+              border: '1px solid var(--border)',
+              display: 'flex',
+              gap: '16px',
+              overflowX: 'auto',
+              scrollbarWidth: 'none'
+            }}>
               {busMarkers.map(bus => (
-                <div key={bus.busNumber} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div key={bus.busNumber} style={{ display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap' }}>
                   <div style={{
                     width: '12px',
                     height: '12px',
                     borderRadius: '50%',
                     background: bus.color
                   }}></div>
-                  <span style={{ fontSize: '0.85rem', color: 'var(--text)' }}>
-                    Bus {bus.busNumber}
-                  </span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Bus {bus.busNumber}</span>
                 </div>
               ))}
             </div>

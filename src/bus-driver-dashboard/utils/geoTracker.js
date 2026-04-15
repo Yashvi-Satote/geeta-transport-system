@@ -43,13 +43,43 @@ export function getStoredLocations() {
 }
 
 export function saveToLocalStorage(locationData) {
-  let current = getStoredLocations();
+  const data = localStorage.getItem(DB_KEY);
+  let current = [];
+  if (data) {
+    try {
+      current = JSON.parse(data);
+    } catch (e) {
+      current = [];
+    }
+  }
+  
   current.push(locationData);
   
-  // Enforce Max Size for Performance
-  if (current.length > 200) {
-    current = current.slice(current.length - 200);
+  // Increase limit for offline scenarios (e.g., 2 hours of tracking at 5s intervals)
+  if (current.length > 2000) {
+    current = current.slice(current.length - 2000);
   }
   
   localStorage.setItem(DB_KEY, JSON.stringify(current));
+}
+
+export function clearStoredLocations() {
+  localStorage.removeItem(DB_KEY);
+}
+
+/**
+ * Mock function to simulate data synchronization to the backend
+ * @returns {Promise<boolean>}
+ */
+export async function syncStoredDataToServer() {
+  const data = localStorage.getItem(DB_KEY);
+  if (!data || JSON.parse(data).length === 0) return true;
+
+  console.log("📡 Syncing offline data to server...", JSON.parse(data).length, "points");
+  
+  // Simulate network latency
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  // Return success
+  return true;
 }
